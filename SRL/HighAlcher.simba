@@ -1,0 +1,66 @@
+Program SimpleAlcher;
+{$DEFINE SMART}
+{$I SRL/OSR.simba}
+{$DEFINE SMARTDEBUG}
+
+Const
+  MAX_ALCHES: Integer = 10000;
+  CONTROL_POINT: TPoint = [713, 331];
+
+Var
+  alches: Integer;
+  alchPoint: TPoint = CONTROL_POINT;
+
+Procedure CastAlchemy();
+Begin
+  if (Gametabs.Open(tabMagic, 3)) then
+  Begin
+    if (GetColor(721, 333) = 849658) then
+    Begin
+      Mouse.Click(alchPoint, MOUSE_LEFT);
+      if (Gametabs.IsOpen(tabInventory, 1200 + SRL.NormalRange(300, 800))) then
+      Begin
+        if (Inventory.IsSlotUsed(15)) then
+        Begin
+          Wait(50, 100 + SRL.NormalRange(50, 1400));
+          Mouse.Click(MOUSE_LEFT);
+          if (Gametabs.IsOpen(tabMagic, 4500 + SRL.NormalRange(300, 800))) then
+          Begin
+            INC(alches);
+            Wait(50, 100 + SRL.NormalRange(50, 1400));
+          End;
+        End Else
+          TerminateScript('No more Items left to alch...');
+      End;
+    End Else
+      TerminateScript('No more nature runes...');
+  End;
+End;
+
+Begin
+  Smart.EnableDrawing := False;
+
+  Srl.Setup([]);
+  Srl.Options := [soDebugAntiban];
+
+  Mouse.Speed := 12;
+
+  While ( SRL.isLoggedIn() and (alches < MAX_ALCHES) ) do
+  Begin
+    CastAlchemy();
+    WriteLn(SRL.MsToTime(GetTimeRunning, Time_Bare) , ' | Alches (P/H): ' , alches , ' (', Round(alches * (3600.0 / (GetTimeRunning / 1000.0))) , ') > XP (P/H) ' , alches * 65 , ' (', Round(alches * 65 * (3600.0 / (GetTimeRunning / 1000.0))) , ')');
+
+    {
+      Not very good antiban,
+      as it would only be performed specifically AFTER alching
+    }
+    if (Random(1, 750) = 69) then
+    Begin
+      WriteLn('Alchemy point changed from ' , alchPoint);
+      alchPoint := CONTROL_POINT.Random(-5, 5, true);
+      WriteLn('to ' , alchPoint);
+    End;
+
+    Wait(50, 100);
+  End;
+End.
