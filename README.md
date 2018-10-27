@@ -1,3 +1,4 @@
-# OSRS
-Simba automation tools
+#Simba
+
+Simba automation tools and snippets
 
