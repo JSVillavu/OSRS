@@ -1,0 +1,37 @@
+program FunWithNodes;
+
+type
+  Node = ^BubbleNode;
+
+  BubbleNode = record
+    value: Integer;
+    previous, next: Node;
+  end;
+
+  BubbleTree = record
+    length: Integer;
+    root: Node;
+  end;
+
+procedure BubbleNode.init(contents: integer);
+begin
+  self.value := contents;
+  self.previous := self.next := nil;
+end;
+
+procedure BubbleNode.setPrevious(node: Node);
+begin
+  self.previous := node;
+end;
+
+procedure BubbleNode.setNext(node: Node);
+begin
+  self.next := node;
+end;
+
+var
+  n: BubbleNode;
+begin
+  n.init(5);
+  writeln(n.value);
+end.
